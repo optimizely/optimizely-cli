@@ -26,20 +26,20 @@ def event():
     help='Show archived events',
 )
 @click.pass_obj
-def list(project, project_id, sort, archived):
+def list(repo, project_id, sort, archived):
     """List Events in a project"""
-    project.require_credentials()
+    repo.require_credentials()
 
     if project_id is None:
-        project_id = project.project_id
+        project_id = repo.project_id
 
     click.echo('Events for project id: {}'.format(project_id))
 
-    events = project.client.list_events(project_id)
+    events = repo.client.list_events(project_id)
     events = sorted(events, key=lambda e: getattr(e, sort))
 
     if not events:
-        click.echo('Unable to list events')
+        click.echo('No events to list')
         return
 
     if archived:
@@ -68,3 +68,39 @@ def list(project, project_id, sort, archived):
       },
     ]
     main.print_table(columns, events)
+
+
+@event.command()
+@click.argument('event_key')
+@click.option(
+    '-d', '--description',
+    help='Event description (optional)',
+)
+@click.pass_obj
+def create(repo, event_key, description):
+    """
+    Create a new custom event in your project
+
+    Custom tracking events allow you to capture and report on visitor actions
+    or events.
+
+    You can always change the key and description later.
+    """
+    repo.require_credentials()
+
+    click.echo('Creating event...')
+    data = {
+        'key': event_key,
+        'name': event_key,
+        'description': description,
+        'project_id': repo.project_id,
+    }
+    new_event = repo.client.create_custom_event(data)
+
+    if not new_event:
+        click.echo('Unable to create a new event')
+        return
+
+    if new_event.id:
+        msg = "Successfully created event '{}' (id: {})"
+        click.echo(msg.format(new_event.key, new_event.id))
