@@ -5,7 +5,7 @@ import os
 import requests
 
 from optimizely_cli import main
-from optimizely_cli import api
+from optimizely_cli.api import client as api_client
 
 
 def verify_token(token):
@@ -61,10 +61,12 @@ def init(project):
         click.echo('You are all set up and ready to go')
         return
 
+    client = api_client.ApiClient(token)
+
     click.echo('Checking for an existing project...')
     detected_name = project.detect_repo_name()
     detected_language = project.detect_project_language()
-    projects = api.projects.list_projects(project.token)
+    projects = client.list_projects()
     discovered_project = [
         p
         for p in projects
@@ -77,7 +79,7 @@ def init(project):
         click.echo('Found project (id: {})'.format(project.project_id))
     else:
         # create the project
-        new_project = api.projects.create_project(
+        new_project = client.create_project(
             project.token,
             detected_language,
             detected_name
