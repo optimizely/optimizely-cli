@@ -5,6 +5,7 @@ import os
 import requests
 
 from optimizely_cli import main
+from optimizely_cli import repo
 from optimizely_cli.api import client as api_client
 
 
@@ -49,10 +50,10 @@ def init(project):
 
     if store_credentials:
         # create the credentials file user-readable/writable only (0600)
-        fdesc = os.open(main.CREDENTIALS_FILE, os.O_WRONLY | os.O_CREAT, 0o600)
+        fdesc = os.open(repo.CREDENTIALS_FILE, os.O_WRONLY | os.O_CREAT, 0o600)
         with os.fdopen(fdesc, 'w') as f:
             json.dump({'token': token}, f, indent=4, separators=(',', ': '))
-        click.echo('Credentials written to {}'.format(main.CREDENTIALS_FILE))
+        click.echo('Credentials written to {}'.format(repo.CREDENTIALS_FILE))
         click.echo('Do not add this file to version control!')
         click.echo('It should stay private\n')
 
@@ -80,9 +81,8 @@ def init(project):
     else:
         # create the project
         new_project = client.create_project(
-            project.token,
-            detected_language,
-            detected_name
+            platform=detected_language,
+            name=detected_name
         )
 
         if not new_project:

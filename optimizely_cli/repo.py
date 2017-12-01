@@ -13,7 +13,9 @@ CONFIG_FILE = '.optimizely.json'
 
 class Repo(object):
     def __init__(self, root_dir=None, credentials_path=None):
-        self.load_credentials(credentials_path)
+        self.token, self.credentials_path = self.load_credentials(
+            credentials_path
+        )
         if root_dir:
             self.vcs = 'git'
             self.root = root_dir
@@ -23,16 +25,21 @@ class Repo(object):
         self.config = config
         self.platform = config.get('platform')
         self.project_id = config.get('project_id')
-        self.client = api_client.ApiClient(self.token)
+
+        if self.token:
+            self.client = api_client.ApiClient(self.token)
+        else:
+            self.client = None
 
     def load_credentials(self, credentials_path=None):
         if credentials_path is None:
             credentials_path = findup.glob(CREDENTIALS_FILE)
         if credentials_path:
-            self.credentials_path = credentials_path
             with open(credentials_path) as f:
                 config = json.load(f)
-                self.token = config.get('token')
+                return (config.get('token'), credentials_path)
+
+        return (None, None)
 
     def require_credentials(self):
         if self.token:
