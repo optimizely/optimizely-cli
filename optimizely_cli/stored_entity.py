@@ -69,8 +69,12 @@ class StoredEntity(object):
         return '{}.yaml'.format(self.name)
 
     @property
-    def local_file_path(self):
+    def full_path(self):
         return os.path.join(self.entity_dir, self.filename)
+
+    @property
+    def relative_path(self):
+        return os.path.relpath(self.full_path)
 
     def to_dict(self):
         return self.repo.client.obj_to_dict(self.entity)
@@ -88,7 +92,7 @@ class StoredEntity(object):
 
     def store(self):
 
-        path = self.local_file_path
+        path = self.full_path
 
         if os.path.isfile(path):
             # if the file already exists and is the same there's nothing to do
@@ -101,5 +105,4 @@ class StoredEntity(object):
             raw_data = self.to_dict()
             yaml.safe_dump(raw_data, outfile, default_flow_style=False)
 
-        relative_path = os.path.relpath(path)
-        return relative_path
+        return True

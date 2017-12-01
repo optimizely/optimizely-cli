@@ -1,3 +1,4 @@
+import os
 from multiprocessing import pool
 
 from optimizely_cli import stored_entity
@@ -37,6 +38,16 @@ def get_update_endpoints(repo):
         'Event': repo.client.update_custom_event,
         'CustomEvent': repo.client.update_custom_event,
     }
+
+
+def get_all_files(data_dir, repo_root=None):
+    files = []
+    for root, dirs, file_list in os.walk(data_dir):
+        files += [os.path.join(root, name) for name in file_list]
+    if repo_root:
+        return [os.path.join(repo_root, f) for f in files]
+    else:
+        return files
 
 
 def fetch(repo, project_id=None, data_dir=None, entity_types=None):

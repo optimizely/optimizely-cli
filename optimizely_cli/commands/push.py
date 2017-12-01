@@ -17,7 +17,7 @@ from optimizely_cli import local_store
     help='Project ID to push data to',
 )
 @click.option(
-    '-d', '--data-dir',
+    '--data-dir',
     type=click.Path(exists=True, file_okay=False, dir_okay=True,
                     readable=True, resolve_path=True),
     default='optimizely',
@@ -37,11 +37,10 @@ def push(project, project_id, data_dir, for_real, entity_files):
         project_id = project.project_id
 
     files = []
-    if entity_files and len(entity_files) > 0:
+    if entity_files:
         files = list(entity_files)
-    if not entity_files:
-        for root, dirs, file_list in os.walk(data_dir):
-            files += [os.path.join(root, name) for name in file_list]
+    else:
+        files = local_store.get_all_files(data_dir)
 
     if not files:
         raise click.UsageError('No files specified')
@@ -87,12 +86,12 @@ def push(project, project_id, data_dir, for_real, entity_files):
     canonical_files = {}
     remote_ids = {}
     for entity in remote_entities:
-        canonical_files[entity.local_file_path] = entity
+        canonical_files[entity.full_path] = entity
         remote_ids[entity.entity.id] = entity
 
     updates, creates, deletes = [], [], []
     for local_entity in entity_list:
-        canonical_file = canonical_files.get(local_entity.local_file_path)
+        canonical_file = canonical_files.get(local_entity.full_path)
         remote_id = remote_ids.get(local_entity.entity.id)
         if canonical_file and remote_id and \
            canonical_file.sha1() == local_entity.sha1():
