@@ -70,12 +70,12 @@ def init(project):
     discovered_project = [
         p
         for p in projects
-        if p.get('name') == detected_name
-        and p.get('platform_sdk') == detected_language
+        if p.name == detected_name
+        and p.platform_sdk == detected_language
     ]
     if discovered_project:
-        project.project_id = discovered_project[0].get('id')
-        project.platform = discovered_project[0].get('platform_sdk')
+        project.project_id = discovered_project[0].id
+        project.platform = discovered_project[0].platform_sdk
         click.echo('Found project (id: {})'.format(project.project_id))
     else:
         # create the project
@@ -89,7 +89,7 @@ def init(project):
             click.echo('Unable to create a new project')
             return
 
-        project_id = new_project.get('id')
+        project_id = new_project.id
         if project_id:
             project.project_id = project_id
             project.platform = detected_language
