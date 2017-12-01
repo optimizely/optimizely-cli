@@ -55,7 +55,13 @@ the instructions::
 	Successfully created project (id: <project_id>)
 	Config file written to .optimizely.json
 
-It is a good idea to add the following to your .gitignore file:
+It is a good idea either to move ``.optimizely-credentials.json`` to your home
+directory (the ``opti`` tool will look there as long as your project is under
+your home):
+
+	$ mv .optimizely-credentials.json ~/
+
+Or add it to your .gitignore file like this:
 
 	$ echo .optimizely-credentials.json >> .gitignore
 
