@@ -23,6 +23,6 @@ setup(
     tests_require=test_requirements,
     entry_points='''
         [console_scripts]
-        optimizely = optimizely_cli:cli
+        opti = optimizely_cli:cli
     ''',
 )

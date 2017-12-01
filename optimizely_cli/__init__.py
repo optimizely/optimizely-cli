@@ -7,6 +7,7 @@ from optimizely_cli.commands import audience # noqa
 from optimizely_cli.commands import attribute # noqa
 from optimizely_cli.commands import group # noqa
 from optimizely_cli.commands import pull # noqa
+from optimizely_cli.commands import push # noqa
 from optimizely_cli.commands import scan # noqa
 
 cli = main.cli

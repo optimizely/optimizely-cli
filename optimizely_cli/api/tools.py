@@ -9,7 +9,7 @@ from . import constants
 logger = logging.getLogger(__name__)
 
 
-def list_all(operation, params=None):
+def list_all(operation, params=None, quiet=False):
     items = []
 
     if params is None:
@@ -18,7 +18,8 @@ def list_all(operation, params=None):
     if not params.get('per_page'):
         params['per_page'] = constants.DEFAULT_PAGE_SIZE
 
-    display_loading()
+    if not quiet:
+        display_loading()
     message = None
     try:
         page_items, response = operation(**params).result()
