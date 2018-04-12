@@ -24,8 +24,20 @@ def verify_token(token):
 
 
 @main.cli.command()
+@click.option(
+    '-n', '--project-name',
+    help='Project name',
+)
+@click.option(
+    '-i', '--project-id',
+    help='Project ID',
+)
+@click.option(
+    '-c', '--create', is_flag=True,
+    help="Create a new project",
+)
 @click.pass_obj
-def init(project):
+def init(project, project_name, project_id, create):
     """Link an Optimizely project with your repository"""
 
     store_credentials = False
@@ -64,25 +76,42 @@ def init(project):
 
     client = api_client.ApiClient(token)
 
-    click.echo('Checking for an existing project...')
-    detected_name = project.detect_repo_name()
+    if not project_name:
+        project_name = project.detect_repo_name()
     detected_language = project.detect_project_language()
-    projects = client.list_projects()
-    discovered_project = [
-        p
-        for p in projects
-        if p.name == detected_name
-        and p.platform_sdk == detected_language
-    ]
-    if discovered_project:
-        project.project_id = discovered_project[0].id
-        project.platform = discovered_project[0].platform_sdk
-        click.echo('Found project (id: {})'.format(project.project_id))
+    if project_id:
+        click.echo("Checking for an existing project with ID {}...".format(project_id))
     else:
+        click.echo("Checking for an existing project named '{}'...".format(project_name))
+    projects = client.list_projects()
+    if project_id:
+      discovered_projects = [
+          p
+          for p in projects
+          if p.id == int(project_id)
+      ]
+    else:
+      discovered_projects = [
+          p
+          for p in projects
+          if p.name == project_name
+      ]
+    if len(discovered_projects) > 1 and detected_language:
+      # try filtering down by platform if there is more than one
+      discovered_projects = [
+          p
+          for p in discovered_projects
+          if p.platform_sdk == detected_language
+      ]
+    if discovered_projects:
+        project.project_id = discovered_projects[0].id
+        project.platform = discovered_projects[0].platform_sdk
+        click.echo('Found project (id: {})'.format(project.project_id))
+    elif create and project_name and detected_language:
         # create the project
         new_project = client.create_project(
             platform=detected_language,
-            name=detected_name
+            name=project_name
         )
 
         if not new_project:
@@ -95,6 +124,13 @@ def init(project):
             project.platform = detected_language
             click.echo('Successfully created project (id: {})'.format(
                        project_id))
+    else:
+      if project_id:
+          click.echo('No project found with id: {}'.format(project_id))
+      else:
+          click.echo('No project found with name: {}'.format(project_name))
+      click.echo('Use -p <project_name> or -i <project_id> to use an existing project or -c to create a new one')
+      return
 
     # write the config file so we have baseline context
     config = {

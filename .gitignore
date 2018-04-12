@@ -83,5 +83,8 @@ junit.xml
 #emacs temp files
 *~
 
+.python-version
+.pytest_cache
+
 .optimizely.json
 .optimizely-credentials.json

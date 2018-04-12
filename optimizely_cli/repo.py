@@ -45,7 +45,7 @@ class Repo(object):
         if self.token:
             return
 
-        click.echo('Could not find credentials.'
+        click.echo('Could not find credentials. '
                    "Make sure you have run 'optimizely init' or specified a "
                    'valid path to a credentials file')
         sys.exit(1)
@@ -107,6 +107,9 @@ class Repo(object):
                     extensions[extension] = 0
                 extensions[extension] += 1
 
-            most_files = sorted(extensions, key=extensions.get,
-                                reverse=True)[0]
-            return extension_languages[most_files]
+            common_extensions = sorted(extensions, key=extensions.get,
+                                       reverse=True)
+            if common_extensions:
+                return extension_languages[common_extensions][0]
+            else:
+                return None
