@@ -2,6 +2,7 @@ import click
 import datetime
 
 from . import repo
+from . import version
 
 
 def format_date(dt):
@@ -44,7 +45,7 @@ def print_table(columns, items):
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing:
         return
-    click.echo('Version 0.1')
+    click.echo('Version {}'.format(version.__version__))
     ctx.exit()
 
 

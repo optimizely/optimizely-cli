@@ -1,6 +1,13 @@
 import sys
+import os
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
+
+here = os.path.abspath(os.path.dirname(__file__))
+__version__ = None
+
+with open(os.path.join(here, 'optimizely_cli', 'version.py')) as _file:
+    exec(_file.read())
 
 requirements = [
     'click==6.7',
@@ -33,7 +40,7 @@ class PyTest(TestCommand):
 
 setup(
     name='optimizely-cli',
-    version='0.1.2',
+    version=__version__,
     py_modules=['opti'],
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
