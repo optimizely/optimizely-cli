@@ -19,13 +19,17 @@ work on other versions of Python.
 Installation
 ------------
 
-Install optimizely-cli using `pip`_::
+Install or upgrade optimizely-cli using pip:
 
-    $ pip install git+ssh://git@github.com/optimizely/optimizely-cli.git
+    $ pip install --upgrade --user git+ssh://git@github.com/optimizely/optimizely-cli.git
 
-Or to upgrade:
+If you get some sort of error about TLS versions like this:
 
-    $ pip install --upgrade git+ssh://git@github.com/optimizely/optimizely-cli.git
+    "There was a problem confirming the ssl certificate: [SSL: TLSV1_ALERT_PROTOCOL_VERSION]"
+
+Then install a newer version of pip and then install again:
+
+    $ curl https://bootstrap.pypa.io/get-pip.py | python
 
 ---------------
 Getting Started
