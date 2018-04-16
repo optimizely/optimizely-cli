@@ -6,6 +6,7 @@ import re
 import sys
 
 from api import client as api_client
+from . import auth
 
 CREDENTIALS_FILE = '.optimizely-credentials.json'
 CONFIG_FILE = '.optimizely.json'
@@ -13,9 +14,17 @@ CONFIG_FILE = '.optimizely.json'
 
 class Repo(object):
     def __init__(self, root_dir=None, credentials_path=None):
-        self.token, self.credentials_path = self.load_credentials(
-            credentials_path
-        )
+        if credentials_path is None:
+            credentials_path = findup.glob(CREDENTIALS_FILE)
+        self.credentials = auth.load_credentials(credentials_path)
+
+        # if the creds are expired, refresh the token
+        if self.credentials.is_expired() and self.credentials.refresh_token:
+            self.credentials = self.oauth.refresh_access_token(
+                self.credentials.refresh_token
+            )
+            self.credentials.write()
+
         if root_dir:
             self.vcs = 'git'
             self.root = root_dir
@@ -26,23 +35,13 @@ class Repo(object):
         self.platform = config.get('platform')
         self.project_id = config.get('project_id')
 
-        if self.token:
-            self.client = api_client.ApiClient(self.token)
+        if self.credentials.is_valid():
+            self.client = api_client.ApiClient(self.credentials.access_token)
         else:
             self.client = None
 
-    def load_credentials(self, credentials_path=None):
-        if credentials_path is None:
-            credentials_path = findup.glob(CREDENTIALS_FILE)
-        if credentials_path:
-            with open(credentials_path) as f:
-                config = json.load(f)
-                return (config.get('token'), credentials_path)
-
-        return (None, None)
-
     def require_credentials(self):
-        if self.token:
+        if self.credentials.is_valid():
             return
 
         click.echo('Could not find credentials. '
@@ -113,3 +112,14 @@ class Repo(object):
                 return extension_languages[common_extensions][0]
             else:
                 return None
+
+    @property
+    def oauth(self):
+        return auth.LocalOAuth2(
+            host='app.optimizely.com',
+            client_id=10600571440,
+            client_secret='zJWQalwxFk8ApplmaCmQuQiNR66gX-14AD8q1ZE2iAM',
+            port=5050,
+            authorize_endpoint='/oauth2/authorize',
+            token_endpoint='/oauth2/token',
+        )
