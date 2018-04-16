@@ -46,7 +46,7 @@ class Credentials(object):
                 creds_dict[attr] = value
         return creds_dict
 
-    def write(self, file_path):
+    def write(self, file_path=None):
         path = file_path or self.path
         fdesc = os.open(path, os.O_WRONLY | os.O_CREAT, 0o600)
         with os.fdopen(fdesc, 'w') as f:

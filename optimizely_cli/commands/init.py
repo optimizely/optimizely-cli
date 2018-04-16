@@ -78,7 +78,7 @@ def init(project, project_name, project_id, create, personal_token):
         click.echo('You are all set up and ready to go')
         return
 
-    client = api_client.ApiClient(token)
+    client = api_client.ApiClient(credentials.access_token)
 
     if not project_name:
         project_name = project.detect_repo_name()

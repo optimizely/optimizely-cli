@@ -50,16 +50,18 @@ class Repo(object):
         sys.exit(1)
 
     def load_config(self, config_path=None):
+        root_dir = self.root or '.'
         if config_path is None:
-            config_path = os.path.join(self.root, CONFIG_FILE)
+            config_path = os.path.join(root_dir, CONFIG_FILE)
         if config_path and os.path.exists(config_path):
             with open(config_path) as f:
                 return json.load(f)
         return {}
 
     def save_config(self, config, config_path=None, echo=False):
+        root_dir = self.root or '.'
         if config_path is None:
-            config_path = os.path.join(self.root, CONFIG_FILE)
+            config_path = os.path.join(root_dir, CONFIG_FILE)
         with open(config_path, 'w') as f:
             json.dump(config, f, indent=4, separators=(',', ': '))
         if echo:
@@ -73,9 +75,11 @@ class Repo(object):
         path = findup.glob('.git')
         if path:
             return 'git', os.path.dirname(path)
+        return (None, None)
 
     def detect_repo_name(self):
-        return os.path.basename(self.root)
+        root_dir = self.root or '.'
+        return os.path.basename(os.path.abspath(root_dir))
 
     def detect_project_language(self):
         extension_languages = {
