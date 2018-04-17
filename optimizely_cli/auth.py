@@ -48,9 +48,18 @@ class Credentials(object):
 
     def write(self, file_path=None):
         path = file_path or self.path
+        config = {}
+
+        # load existing config
+        if os.path.exists(path):
+            with open(file_path) as f:
+                config = json.load(f)
+
         fdesc = os.open(path, os.O_WRONLY | os.O_CREAT, 0o600)
         with os.fdopen(fdesc, 'w') as f:
-            json.dump(self.as_dict(), f, indent=4, separators=(',', ': '))
+            config.update(self.as_dict())
+            f.truncate()
+            json.dump(config, f, indent=4, separators=(',', ': '))
         print('Credentials written to {}'.format(path))
         return True
 

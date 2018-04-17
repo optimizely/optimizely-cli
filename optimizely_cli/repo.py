@@ -23,7 +23,7 @@ class Repo(object):
             self.credentials = self.oauth.refresh_access_token(
                 self.credentials.refresh_token
             )
-            self.credentials.write()
+            self.credentials.write(credentials_path)
 
         if root_dir:
             self.vcs = 'git'
