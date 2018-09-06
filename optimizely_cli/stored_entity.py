@@ -85,15 +85,29 @@ class StoredEntity(object):
         entity_type = '{}{}'.format(self.entity_type, 'Update')
         return self.repo.client.change_type(entity_type, self.entity)
 
-    def sha1(self):
+    def serialized_content(self):
         raw_data = self.to_dict()
         content = yaml.safe_dump(raw_data, default_flow_style=False)
+        read_only_properties = self.repo.client.read_only_properties(self.entity)
+
+        lines = []
+        for line in content.splitlines():
+            property_name = line.split(':')[0]
+
+            if property_name in read_only_properties:
+                lines.append('{:<60} # READ-ONLY'.format(line))
+            else:
+                lines.append(line)
+
+        return "\n".join(lines)
+
+    def sha1(self):
+        content = self.serialized_content()
         sha1 = hashlib.sha1()
         sha1.update(content)
         return sha1.hexdigest()
 
     def store(self):
-
         path = self.full_path
 
         if os.path.isfile(path):
@@ -103,8 +117,8 @@ class StoredEntity(object):
                 return
 
         ensure_dir_exists(self.entity_dir)
+        content = self.serialized_content()
         with open(path, 'w') as outfile:
-            raw_data = self.to_dict()
-            yaml.safe_dump(raw_data, outfile, default_flow_style=False)
+            outfile.write(content)
 
         return True
