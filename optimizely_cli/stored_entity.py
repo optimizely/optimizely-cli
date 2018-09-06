@@ -10,6 +10,8 @@ ENTITY_TO_DIR_MAPPING = {
     'Attribute': 'attributes',
     'CustomEvent': 'custom_events',
     'Event': 'custom_events',
+    'Feature': 'features',
+    'Environment': 'environments',
 }
 REVERSE_ENTITY_MAPPING = {v: k for k, v in ENTITY_TO_DIR_MAPPING.iteritems()}
 

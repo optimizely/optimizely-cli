@@ -90,6 +90,30 @@ class ApiClient(object):
 
         return items
 
+    def list_features(self, project_id, archived=False):
+        items = tools.list_all(self.client.Features.list_features,
+                               params={'project_id': project_id},
+                               quiet=self.quiet)
+
+        if archived:
+            items = [i for i in items if get(i, 'archived') is True]
+        else:
+            items = [i for i in items if not get(i, 'archived')]
+
+        return items
+
+    def list_environments(self, project_id, archived=False):
+        items = tools.list_all(self.client.Environments.list_environments,
+                               params={'project_id': project_id},
+                               quiet=self.quiet)
+
+        if archived:
+            items = [i for i in items if get(i, 'archived') is True]
+        else:
+            items = [i for i in items if not get(i, 'archived')]
+
+        return items
+
     def list_groups(self, project_id, archived=False):
         items = tools.list_all(self.client.Groups.list_groups,
                                params={'project_id': project_id},
@@ -256,6 +280,30 @@ class ApiClient(object):
         ).result()
         return event
 
+    def update_feature(self, params=None):
+        if hasattr(params, 'id'):
+            feature_id = params.id
+        else:
+            feature_id = params.get('feature_id')
+
+        feature, response = self.client.Features.update_feature(
+            feature_id=feature_id,
+            body=params
+        ).result()
+        return feature
+
+    def update_environment(self, params=None):
+        if hasattr(params, 'id'):
+            environment_id = params.id
+        else:
+            environment_id = params.get('environment_id')
+
+        environment, response = self.client.Environment.update_environment(
+            environment_id=environment_id,
+            body=params
+        ).result()
+        return environment
+
     def dict_to_obj(self, entity_type, entity_dict):
         spec = self.client.swagger_spec
         definition = spec.spec_dict['definitions'][entity_type]
@@ -277,6 +325,18 @@ class ApiClient(object):
             obj
         )
         return item
+
+    def read_only_properties(self, obj):
+        spec = self.client.swagger_spec
+        entity_type = type(obj).__name__
+        definition = spec.spec_dict['definitions'][entity_type]
+
+        read_only_properties = [
+            k
+            for k, p in definition.get('properties').iteritems()
+            if p.get('readOnly')
+        ]
+        return read_only_properties
 
     def change_type(self, entity_type, entity):
         entity_dict = self.obj_to_dict(entity)

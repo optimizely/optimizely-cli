@@ -27,7 +27,10 @@ def print_table(columns, items):
     for item in items:
         row = []
         for column in columns:
-            value = getattr(item, column.get('field'))
+            if column.get('accessor'):
+                value = column.get('accessor')(item)
+            else:
+                value = getattr(item, column.get('field'))
             if column.get('type') == 'date':
                 value = format_date(value)
             else:

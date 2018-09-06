@@ -4,7 +4,7 @@ from multiprocessing import pool
 from optimizely_cli import stored_entity
 
 all_list_endpoints = ['Experiment', 'Group', 'Audience', 'Attribute',
-                      'CustomEvent']
+                      'CustomEvent', 'Feature', 'Environment']
 
 
 def get_list_endpoints(repo):
@@ -15,6 +15,8 @@ def get_list_endpoints(repo):
         'Attribute': repo.client.list_attributes,
         'Event': repo.client.list_events,
         'CustomEvent': repo.client.list_events,
+        'Feature': repo.client.list_features,
+        'Environment': repo.client.list_environments,
     }
 
 
@@ -37,13 +39,19 @@ def get_update_endpoints(repo):
         'Attribute': repo.client.update_attribute,
         'Event': repo.client.update_custom_event,
         'CustomEvent': repo.client.update_custom_event,
+        'Feature': repo.client.update_feature,
+        'Environment': repo.client.update_environment,
     }
 
 
 def get_all_files(data_dir, repo_root=None):
     files = []
     for root, dirs, file_list in os.walk(data_dir):
-        files += [os.path.join(root, name) for name in file_list]
+        files += [
+            os.path.join(root, name)
+            for name in file_list
+            if name.endswith('.yaml')
+        ]
     if repo_root:
         return [os.path.join(repo_root, f) for f in files]
     else:

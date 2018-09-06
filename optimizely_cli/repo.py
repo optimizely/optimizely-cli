@@ -75,7 +75,7 @@ class Repo(object):
         path = findup.glob('.git')
         if path:
             return 'git', os.path.dirname(path)
-        return (None, None)
+        return (None, '.')
 
     def detect_repo_name(self):
         root_dir = self.root or '.'
