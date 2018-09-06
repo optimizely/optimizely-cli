@@ -35,14 +35,7 @@ Then install a newer version of pip and then install again:
 Getting Started
 ---------------
 
-To use optimizely-cli, you need to link it to your Optimizely account.  You
-can do this in several ways:
-
-* Environment variables
-* Shared credentials file
-* Config file
-* IAM Role
-
+To use optimizely-cli, you need to link it to your Optimizely account.
 The quickest way to get started is to run the ``opti init`` command and follow
 the instructions::
 
@@ -59,9 +52,8 @@ the instructions::
 	Successfully created project (id: <project_id>)
 	Config file written to .optimizely.json
 
-It is a good idea either to move ``.optimizely-credentials.json`` to your home
-directory (the ``opti`` tool will look there as long as your project is under
-your home):
+You can move ``.optimizely-credentials.json`` to your home directory (the
+``opti`` tool will look there as long as your project is under your home):
 
 	$ mv .optimizely-credentials.json ~/
 
@@ -71,13 +63,23 @@ Or add it to your .gitignore file like this:
 
 Don't commit your credentials to version control!
 
-------------------
-Command Completion
-------------------
+^^^^^
+Usage
+^^^^^
 
-The ``opti`` utility can complete your commands. Just add the following to your .bashrc:
+For a full list of commands, just type ``opti`` at the command line. Here are some examples of available sub-commands:
 
-    eval "$(_OPTI_COMPLETE=source opti)"
+    attribute    Manage Audience Attributes
+    audience     Manage Optimizely audiences
+    environment  Manage Environments
+    event        List, create, and manage Optimizely events
+    experiment   List, create, and manage Optimizely experiments
+    feature      Manage Features
+    group        Manage Optimizely exclusion groups
+    init         Link an Optimizely project with your repository
+    project      List, create, and manage Optimizely projects
+    pull         Pull down the current state of an Optimizely project
+    push         Push back local data to an Optimizely project
 
 ^^^^^^^^
 Examples
@@ -95,6 +97,25 @@ Get a list of events ::
 
     $ opti event list
 
+Create a new event ::
+
+    $ opti event create new_event
+
+Pull all Optimizely experiment data and write them to a local ``optimizely/`` directory ::
+
+    $ opti pull
+
+Collect changes to your local ``optimizely/`` directory and apply them your data in Optimizely ::
+
+    $ opti push
+
+------------------
+Command Completion
+------------------
+
+The ``opti`` utility can complete your commands. Just add the following to your .bashrc:
+
+    eval "$(_OPTI_COMPLETE=source opti)"
 
 ------------
 Contributing
