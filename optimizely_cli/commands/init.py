@@ -73,7 +73,7 @@ def init(project, project_name, project_id, create, personal_token):
         click.echo('Do not add this file to version control!')
         click.echo('It should stay private\n')
 
-    if project.platform and project.project_id:
+    if project.project_id:
         click.echo('Config successfully loaded')
         click.echo('You are all set up and ready to go')
         return
@@ -82,7 +82,6 @@ def init(project, project_name, project_id, create, personal_token):
 
     if not project_name:
         project_name = project.detect_repo_name()
-    detected_language = project.detect_project_language()
     if project_id:
         click.echo("Checking for an existing project with ID {}...".format(
                    project_id))
@@ -102,21 +101,13 @@ def init(project, project_name, project_id, create, personal_token):
             for p in projects
             if p.name == project_name
         ]
-    if len(discovered_projects) > 1 and detected_language:
-        # try filtering down by platform if there is more than one
-        discovered_projects = [
-            p
-            for p in discovered_projects
-            if p.platform_sdk == detected_language
-        ]
     if discovered_projects:
         project.project_id = discovered_projects[0].id
-        project.platform = discovered_projects[0].platform_sdk
         click.echo('Found project (id: {})'.format(project.project_id))
-    elif create and project_name and detected_language:
+    elif create and project_name:
         # create the project
         new_project = client.create_project(
-            platform=detected_language,
+            platform=None,
             name=project_name
         )
 
@@ -127,7 +118,6 @@ def init(project, project_name, project_id, create, personal_token):
         project_id = new_project.id
         if project_id:
             project.project_id = project_id
-            project.platform = detected_language
             click.echo('Successfully created project (id: {})'.format(
                        project_id))
     else:
@@ -142,6 +132,5 @@ def init(project, project_name, project_id, create, personal_token):
     # write the config file so we have baseline context
     config = {
         'project_id': project.project_id,
-        'platform': project.platform,
     }
     project.save_config(config, echo=True)

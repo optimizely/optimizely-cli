@@ -42,20 +42,12 @@ def list(project, platform, sort, archived):
     """List projects in Optimizely"""
     project.require_credentials()
 
-    if sort == 'platform':
-        sort = 'platform_sdk'
-
     projects = project.client.list_projects(archived=archived)
     projects = sorted(projects, key=lambda p: getattr(p, sort))
 
     if not projects:
         click.echo('Unable to list projects')
         return
-
-    projects = [
-        p for p in projects
-        if platform is None or platform == p.get('platform_sdk')
-    ]
 
     columns = [
       {
@@ -68,8 +60,8 @@ def list(project, platform, sort, archived):
           'truncate': 30,
       },
       {
-          'field': 'platform_sdk',
-          'label': 'PLATFORM',
+          'label': 'TYPE',
+          'accessor': lambda project: 'Web' if project.platform == 'web' else 'Full Stack',
           'width': 10,
       },
       {

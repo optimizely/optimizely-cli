@@ -51,12 +51,6 @@ class ApiClient(object):
         else:
             projects = [p for p in projects if p.status != 'archived']
 
-        for project in projects:
-            if project.platform == 'custom':
-                project['platform_sdk'] = project.sdks[0] or 'custom'
-            else:
-                project['platform_sdk'] = project.platform
-
         return projects
 
     def list_experiments(self, project_id, archived=False):
@@ -146,7 +140,7 @@ class ApiClient(object):
             data['platform'] = platform
         else:
             data['platform'] = 'custom'
-            data['sdks'] = [platform]
+            data['sdks'] = []
 
         if description:
             data['description'] = description
