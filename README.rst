@@ -94,3 +94,10 @@ Create a new project ::
 Get a list of events ::
 
     $ opti event list
+
+
+------------
+Contributing
+------------
+
+Please see [CONTRIBUTING](CONTRIBUTING.md).
