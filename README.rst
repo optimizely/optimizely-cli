@@ -69,17 +69,19 @@ Usage
 
 For a full list of commands, just type ``opti`` at the command line. Here are some examples of available sub-commands:
 
-    attribute    Manage Audience Attributes
-    audience     Manage Optimizely audiences
-    environment  Manage Environments
-    event        List, create, and manage Optimizely events
-    experiment   List, create, and manage Optimizely experiments
-    feature      Manage Features
-    group        Manage Optimizely exclusion groups
-    init         Link an Optimizely project with your repository
-    project      List, create, and manage Optimizely projects
-    pull         Pull down the current state of an Optimizely project
-    push         Push back local data to an Optimizely project
+===========  ===================================================
+attribute    Manage Audience Attributes
+audience     Manage Optimizely audiences
+environment  Manage Environments
+event        List, create, and manage Optimizely events
+experiment   List, create, and manage Optimizely experiments
+feature      Manage Features
+group        Manage Optimizely exclusion groups
+init         Link an Optimizely project with your repository
+project      List, create, and manage Optimizely projects
+pull         Pull down the current state of an Optimizely project
+push         Push back local data to an Optimizely project
+===========  ===================================================
 
 ^^^^^^^^
 Examples
