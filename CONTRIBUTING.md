@@ -14,10 +14,10 @@ We welcome contributions and feedback! All contributors must sign our [Contribut
 
 ## Pull request acceptance criteria
 
-* **All code must have test coverage.** We use unittest. Changes in functionality should have accompanying unit tests. Bug fixes should have accompanying regression tests.
+* **All code must have test coverage.** We use pytest. Changes in functionality should have accompanying unit tests. Bug fixes should have accompanying regression tests.
   * Tests are located in `/tests` with one file per class.
 * Please don't change the `__version__`. We'll take care of bumping the version when we next release.
-* Lint your code with PEP-8 before submitting.
+* Lint your code with PEP-8 or flake8 before submitting.
 
 ## Style
 
