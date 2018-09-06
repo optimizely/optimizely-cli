@@ -123,4 +123,6 @@ The ``opti`` utility can complete your commands. Just add the following to your 
 Contributing
 ------------
 
-Please see [CONTRIBUTING](CONTRIBUTING.md).
+Please see `contributing`_.
+
+.. _contributing: CONTRIBUTING.md
