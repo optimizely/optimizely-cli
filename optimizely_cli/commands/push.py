@@ -38,12 +38,12 @@ from optimizely_cli import local_store
     help='Directory load to data from',
 )
 @click.option(
-    '-f', '--for-real', is_flag=True,
-    help='Actually push updates, instead of reporting what would be pushed',
+    '-d', '--dry-run', is_flag=True,
+    help='Don\'t push updates, just report what would be pushed',
 )
 @click.argument('entity_files', nargs=-1, type=click.Path(exists=True))
 @click.pass_obj
-def push(project, project_id, data_dir, for_real, entity_files):
+def push(project, project_id, data_dir, dry_run, entity_files):
     """Push back local data to an Optimizely project"""
     project.require_credentials()
 
@@ -126,7 +126,7 @@ def push(project, project_id, data_dir, for_real, entity_files):
     update_endpoints = local_store.get_update_endpoints(project)
     for item in creates:
         click.echo('Create {}: {}'.format(item.entity_type, item.name))
-        if for_real:
+        if not dry_run:
             endpoint = create_endpoints.get(item.entity_type)
             obj = item.entity
             if hasattr(obj, 'project_id') and obj.project_id != project_id:
@@ -136,7 +136,7 @@ def push(project, project_id, data_dir, for_real, entity_files):
 
     for item in updates:
         click.echo('Update {}: {}'.format(item.entity_type, item.name))
-        if for_real:
+        if not dry_run:
             endpoint = update_endpoints.get(item.entity_type)
             endpoint(item.as_update())
 
@@ -144,9 +144,9 @@ def push(project, project_id, data_dir, for_real, entity_files):
         click.echo('No changes to push')
         sys.exit(0)
 
-    if for_real:
+    if not dry_run:
         click.echo('Changes have been pushed.')
         click.echo('Go to https://app.optimizely.com/v2/projects/{} '
                    'to see your changes'.format(project_id))
     else:
-        click.echo('Running without --for-real. No changes have been made')
+        click.echo('Running with --dry-run. No changes have been made')
