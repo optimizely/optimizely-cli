@@ -306,7 +306,7 @@ class ApiClient(object):
         else:
             environment_id = params.get('environment_id')
 
-        environment, response = self.client.Environment.update_environment(
+        environment, response = self.client.Environments.update_environment(
             environment_id=environment_id,
             body=params
         ).result()
