@@ -123,7 +123,7 @@ The ``opti`` utility can complete your commands. Just add the following to your 
 Contributing
 ------------
 
-Please see `contributing`_.
+Please see our `Contributing Guidelines <contributing_>`_.
 
 .. _contributing: CONTRIBUTING.md
 .. _additional_code: ADDITIONAL_CODE.md
@@ -133,6 +133,6 @@ Please see `contributing`_.
 Additional Code
 ---------------
 
-Please see `additional_code`_.
+Please see `Additional Code <additional_code_>`_.
 
 Any use of the Optimizely Service is subject to our `Terms of Service <terms_>`_ or the separate, written agreement between your company and Optimizely (if any).
