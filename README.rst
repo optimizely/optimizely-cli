@@ -126,6 +126,13 @@ Contributing
 Please see `contributing`_.
 
 .. _contributing: CONTRIBUTING.md
+.. _additional_code: ADDITIONAL_CODE.md
 .. _terms: http://www.optimizely.com/terms
+
+---------------
+Additional Code
+---------------
+
+Please see `additional_code`_.
 
 Any use of the Optimizely Service is subject to our `Terms of Service <terms_>`_ or the separate, written agreement between your company and Optimizely (if any).
