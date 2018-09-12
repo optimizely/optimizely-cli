@@ -41,6 +41,13 @@ class PyTest(TestCommand):
 setup(
     name='optimizely-cli',
     version=__version__,
+    description='A command-line interface for Optimizely Projects',
+    long_description=open('README.rst').read(),
+    long_description_content_type='text/x-rst',
+    author='Optimizely',
+    author_email='developers@optimizely.com',
+    url='https://github.com/optimizely/optimizely-cli',
+    license=open('LICENSE').read(),
     py_modules=['opti'],
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
