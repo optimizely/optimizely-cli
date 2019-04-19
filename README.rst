@@ -21,7 +21,7 @@ Installation
 
 Install or upgrade optimizely-cli using pip:
 
-    $ pip install --upgrade git+git://github.com/optimizely/optimizely-cli
+    $ pip install --upgrade optimizely-cli
 
 If you get some sort of error about TLS versions like this:
 
